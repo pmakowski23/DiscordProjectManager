@@ -155,5 +155,9 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
     );
   }, new MessageActionRow());
   await channel.sendTyping();
-  await channel.send({ content: 'Choose your role:', components: [row] });
+  const message = await channel.send({
+    content: 'Choose your role:',
+    components: [row],
+  });
+  await message.pin()
 };
