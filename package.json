@@ -2,9 +2,10 @@
   "name": "discord-project-manager",
   "version": "1.0.0",
   "description": "",
-    "engines": {
+  "engines": {
     "node": ">= 17.4.0 "
   },
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "~27.0.2",
     "@types/node": "~16.11.6",
