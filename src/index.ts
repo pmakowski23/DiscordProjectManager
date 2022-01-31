@@ -1,5 +1,15 @@
-import { Client, Intents, GuildMember, MessageButton, Collection, Role, RoleResolvable } from 'discord.js';
+import {
+  Client,
+  Intents,
+  GuildMember,
+  MessageButton,
+  Collection,
+  Role,
+  RoleResolvable,
+} from 'discord.js';
 import { env } from 'process';
+import * as express from 'express';
+import * as cors from 'cors';
 import * as dotenv from 'dotenv';
 import deploy from './deployCommands';
 import {
@@ -13,6 +23,16 @@ import {
 import { clearChannels, clearRoles } from './commands/clear';
 
 dotenv.config();
+const app = express();
+const port = 5000;
+
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json());
+
+app.get('/', (_req: express.Request, res: express.Response) => {
+  res.send("I'm alive");
+});
 
 const { TOKEN } = env;
 deploy();
@@ -30,12 +50,15 @@ client.on('interactionCreate', async (interaction) => {
   const { member, component, guild } = interaction;
   const guildMember = member as GuildMember;
   const button = component as MessageButton;
-  let role: RoleResolvable | Collection<string, Role> | readonly RoleResolvable[];
+  let role:
+    | RoleResolvable
+    | Collection<string, Role>
+    | readonly RoleResolvable[];
   if (button.customId.includes('join')) {
-		const roleName = button.customId.split('-').slice(1, 10).join('-');
+    const roleName = button.customId.split('-').slice(1, 10).join('-');
     role = guild.roles.cache.find((role) => role.name === roleName);
   } else {
-		const roleName = button.label;
+    const roleName = button.label;
     role = guild.roles.cache.find((role) => role.name === roleName);
   }
   guildMember.roles.add(role);
@@ -87,3 +110,11 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.login(TOKEN);
+
+const runApp = async (app: express.Application) => {
+  app.listen(port, () =>
+    console.log(`Server running on http://localhost:${port}`),
+  );
+};
+
+runApp(app);
