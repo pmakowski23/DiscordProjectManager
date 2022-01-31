@@ -8,7 +8,7 @@ const { TOKEN, CLIENT_ID } = process.env;
 
 const commands = [];
 const commandFiles = fs
-  .readdirSync(`${process.cwd()}\\src\\commands`)
+  .readdirSync(`${process.cwd()}/src/commands`)
   .filter((file) => file.endsWith('.ts'));
 
 export default async () => {
