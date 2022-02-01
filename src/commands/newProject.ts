@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import {
   CommandInteractionOption,
-  CacheType,
   CommandInteraction,
   Interaction,
   Role,
@@ -29,8 +28,8 @@ export const data = new SlashCommandBuilder()
   );
 
 export const checkProjectName = async (
-  interaction: CommandInteraction<CacheType>,
-  data: readonly CommandInteractionOption<CacheType>[],
+  interaction: CommandInteraction,
+  data: readonly CommandInteractionOption[],
 ) => {
   const [shortnameObj, nameObj] = data;
   const shortname = shortnameObj.value;
@@ -59,7 +58,7 @@ const basicRoles: RoleData[] = [
 ];
 
 export const createProjectRoles = async (
-  interaction: Interaction<CacheType>,
+  interaction: Interaction,
   projectShortname: string,
 ): Promise<Role[]> => {
   return await Promise.all(
@@ -81,7 +80,7 @@ export const createProjectRoles = async (
 };
 
 export const createCategory = async (
-  interaction: Interaction<CacheType>,
+  interaction: Interaction,
   categoryName: string,
   projectShortname: string,
 ) => {
@@ -103,7 +102,7 @@ export const createCategory = async (
 };
 
 export const createChannels = async (
-  interaction: Interaction<CacheType>,
+  interaction: Interaction,
   category: CategoryChannel,
   roles: Role[],
 ) => {
@@ -163,7 +162,7 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
 };
 
 export const handleCreateNewProject = async (
-  interaction: CommandInteraction<CacheType>,
+  interaction: CommandInteraction,
   name: string,
   shortname: string,
 ) => {

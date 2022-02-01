@@ -1,6 +1,5 @@
 import {
   ButtonInteraction,
-  CacheType,
   Client,
   GuildMember,
   Message,
@@ -14,7 +13,7 @@ import {
 } from './commands/newProject';
 import { clearChannels, clearRoles } from './commands/clear';
 
-const handleButtonClick = (interaction: ButtonInteraction<CacheType>) => {
+const handleButtonClick = (interaction: ButtonInteraction) => {
   const { member, component, guild } = interaction;
   const guildMember = member as GuildMember;
   const button = component as MessageButton;
