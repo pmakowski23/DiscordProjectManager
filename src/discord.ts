@@ -35,7 +35,7 @@ export default (client: Client<boolean>) => {
     console.log('Ready!');
   });
 
-  client.on('guildCreate', (guild) => {
+  client.on('guildCreate', async (guild) => {
     const isThereProjectsChannel = guild.channels.cache.some(
       (channel) => channel.name === 'projects' && channel.type === 'GUILD_TEXT',
     );
@@ -45,13 +45,13 @@ export default (client: Client<boolean>) => {
       (role) => role.name === 'project-manager',
     );
     if (!isThereprojectManagerRole) {
-      guild.roles.create({ name: 'project-manager', color: 'NAVY' });
+      await guild.roles.create({ name: 'project-manager', color: 'NAVY' });
     }
     const projectManagerRole = guild.roles.cache.find(
       (role) => role.name === 'project-manager',
     );
 
-    guild.channels.create('project-manager', {
+    await guild.channels.create('project-manager', {
       type: 'GUILD_TEXT',
       permissionOverwrites: [
         {
