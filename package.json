@@ -21,7 +21,9 @@
   },
   "scripts": {
     "start": "nodemon",
-    "prebuild": "npm run lint",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
+    "prebuild": "yarn run lint",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "author": "Patryk Makowski",

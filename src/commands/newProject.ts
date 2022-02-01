@@ -159,5 +159,19 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
     content: 'Choose your role:',
     components: [row],
   });
-  await message.pin()
+  await message.pin();
+};
+
+export const handleCreateNewProject = async (
+  interaction: CommandInteraction<CacheType>,
+  name: string,
+  shortname: string,
+) => {
+  const roles = await createProjectRoles(interaction, shortname);
+  const category = await createCategory(interaction, name, shortname);
+  const channels = await createChannels(interaction, category, roles);
+  const generalChannel = channels[0];
+  await addRoleChooser(roles, generalChannel);
+
+  return { roles };
 };
