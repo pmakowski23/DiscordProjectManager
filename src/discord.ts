@@ -81,6 +81,11 @@ export default (client: Client<boolean>) => {
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
 
+    const projectsChannel = interaction.guild.channels.cache.find(
+      (channel) => channel.name === 'projects' && channel.type === 'GUILD_TEXT',
+    );
+    if (interaction.channelId !== projectsChannel.id) return;
+
     const { commandName, options } = interaction;
     const { data } = options;
 
