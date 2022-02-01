@@ -3,6 +3,7 @@ import {
   CacheType,
   Client,
   GuildMember,
+  Message,
   MessageButton,
   Role,
 } from 'discord.js';
@@ -68,10 +69,11 @@ export default (client: Client<boolean>) => {
           shortname,
         );
 
-        await interaction.editReply({
+        const message = (await interaction.editReply({
           content: `You created project with name ${projectName}`,
           components: [joinButton(roles[0].name)],
-        });
+        })) as Message<boolean>;
+        await message.pin();
       } catch (err) {
         console.log(err);
       }
