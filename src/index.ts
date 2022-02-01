@@ -24,7 +24,7 @@ import { clearChannels, clearRoles } from './commands/clear';
 
 dotenv.config();
 const app = express();
-const port = 5000;
+const port = env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
