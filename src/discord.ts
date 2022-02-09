@@ -37,7 +37,8 @@ export default (client: Client<boolean>) => {
 
   client.on('guildCreate', async (guild) => {
     const isThereProjectsChannel = guild.channels.cache.some(
-      (channel) => channel.name === 'projects' && channel.type === 'GUILD_TEXT',
+      (channel) =>
+        channel.name === 'project-manager' && channel.type === 'GUILD_TEXT',
     );
     if (isThereProjectsChannel) return;
 
@@ -82,9 +83,14 @@ export default (client: Client<boolean>) => {
     if (!interaction.isCommand()) return;
 
     const projectsChannel = interaction.guild.channels.cache.find(
-      (channel) => channel.name === 'projects' && channel.type === 'GUILD_TEXT',
+      (channel) =>
+        channel.name === 'project-manager' && channel.type === 'GUILD_TEXT',
     );
-    if (interaction.channelId !== projectsChannel.id) return;
+    if (interaction.channelId !== projectsChannel.id) {
+      interaction.reply('Wrong channel');
+      interaction.deleteReply();
+      return;
+    }
 
     const { commandName, options } = interaction;
     const { data } = options;
