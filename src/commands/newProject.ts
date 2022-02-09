@@ -53,8 +53,8 @@ const basicRoles: RoleData[] = [
   {},
   { name: 'Frontend', color: 'GREEN' },
   { name: 'Backend', color: 'ORANGE' },
+  { name: 'Designer', color: 'FUCHSIA' },
   { name: 'DevOps', color: 'BLUE' },
-  { name: 'Designer', color: 'BLUE' },
   { name: 'Product-owner', color: 'NAVY' },
 ];
 

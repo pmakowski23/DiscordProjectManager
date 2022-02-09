@@ -35,11 +35,6 @@ export default (client: Client<boolean>) => {
     console.log('Ready!');
   });
 
-  client.on('message', async (message: Message) => {
-    if (message.type === 'CHANNEL_PINNED_MESSAGE') message.delete();
-    return;
-  });
-
   client.on('guildCreate', async (guild) => {
     const isThereProjectsChannel = guild.channels.cache.some(
       (channel) =>
