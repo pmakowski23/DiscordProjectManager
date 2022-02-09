@@ -114,7 +114,8 @@ export default (client: Client<boolean>) => {
           content: `You created project with name ${projectName}`,
           components: [joinButton(roles[0].name)],
         })) as Message<boolean>;
-        await message.pin();
+        const pinMessage = await message.pin();
+        await pinMessage.delete();
       } catch (err) {
         console.log(err);
       }

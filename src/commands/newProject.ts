@@ -54,6 +54,7 @@ const basicRoles: RoleData[] = [
   { name: 'Frontend', color: 'GREEN' },
   { name: 'Backend', color: 'ORANGE' },
   { name: 'DevOps', color: 'BLUE' },
+  { name: 'Designer', color: 'BLUE' },
   { name: 'Product-owner', color: 'NAVY' },
 ];
 
@@ -158,7 +159,8 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
     content: 'Choose your role:',
     components: [row],
   });
-  await message.pin();
+  const pinMessage = await message.pin();
+  await pinMessage.delete();
 };
 
 export const handleCreateNewProject = async (
