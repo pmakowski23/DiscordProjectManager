@@ -159,8 +159,7 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
     content: 'Choose your role:',
     components: [row],
   });
-  const pinMessage = await message.pin();
-  await pinMessage.delete();
+  await message.pin();
 };
 
 export const handleCreateNewProject = async (

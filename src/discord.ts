@@ -35,6 +35,11 @@ export default (client: Client<boolean>) => {
     console.log('Ready!');
   });
 
+  client.on('message', async (message: Message) => {
+    if (message.type === 'CHANNEL_PINNED_MESSAGE') message.delete();
+    return;
+  });
+
   client.on('guildCreate', async (guild) => {
     const isThereProjectsChannel = guild.channels.cache.some(
       (channel) =>
@@ -114,8 +119,7 @@ export default (client: Client<boolean>) => {
           content: `You created project with name ${projectName}`,
           components: [joinButton(roles[0].name)],
         })) as Message<boolean>;
-        const pinMessage = await message.pin();
-        await pinMessage.delete();
+        await message.pin();
       } catch (err) {
         console.log(err);
       }
