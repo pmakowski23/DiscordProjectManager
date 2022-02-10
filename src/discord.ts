@@ -5,6 +5,7 @@ import {
   Message,
   MessageButton,
   Role,
+  TextChannel,
 } from 'discord.js';
 import {
   checkProjectName,
@@ -30,9 +31,22 @@ const handleButtonClick = (interaction: ButtonInteraction) => {
   return { guildMember, role };
 };
 
-export default (client: Client<boolean>) => {
+export default (client: Client) => {
   client.once('ready', () => {
     console.log('Ready!');
+  });
+
+  client.on('guildMemberAdd', async (member: GuildMember) => {
+    const joinedChannel = client.channels.cache.find(
+      (channel) =>
+        channel.type === 'GUILD_TEXT' &&
+        channel.lastMessage.content.includes(member.id),
+    ) as TextChannel;
+    if (!joinedChannel) return;
+    await joinedChannel.sendTyping();
+    await joinedChannel.send({
+      content: `Hej <@${member.id}>! Prosiłbym o ustawienie sobie imienia i nazwiska jako nick na tym serwerze.`,
+    });
   });
 
   client.on('guildCreate', async (guild) => {
@@ -113,7 +127,7 @@ export default (client: Client<boolean>) => {
         const message = (await interaction.editReply({
           content: `You created project with name ${projectName}`,
           components: [joinButton(roles[0].name)],
-        })) as Message<boolean>;
+        })) as Message;
         await message.pin();
       } catch (err) {
         console.log(err);
