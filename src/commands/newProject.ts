@@ -9,6 +9,7 @@ import {
   MessageButton,
   TextChannel,
   RoleData,
+  Message,
 } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
@@ -169,10 +170,11 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
   await message.pin();
 };
 
-export const handleCreateNewProject = async (
+export const handleCreateNewProjectCommand = async (
   interaction: CommandInteraction,
   name: string,
   shortname: string,
+  projectName: string,
 ) => {
   const roles = await createProjectRoles(interaction, shortname);
   const category = await createCategory(interaction, name, shortname);
@@ -180,5 +182,9 @@ export const handleCreateNewProject = async (
   const generalChannel = channels[0];
   await addRoleChooser(roles, generalChannel);
 
-  return { roles };
+  const message = (await interaction.editReply({
+    content: `You created project with name ${projectName}`,
+    components: [joinButton(roles[0].name)],
+  })) as Message;
+  await message.pin();
 };
