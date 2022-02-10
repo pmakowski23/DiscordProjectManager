@@ -19,16 +19,29 @@ const handleButtonClick = (interaction: ButtonInteraction) => {
   const guildMember = member as GuildMember;
   const button = component as MessageButton;
   let role: Role;
-  if (button.customId.includes('join')) {
-    const roleName = button.customId.split('-').slice(1, 10).join('-');
-    role = guild.roles.cache.find((role) => role.name === roleName);
+  let isRemove = false;
+  if (button.customId.includes('remove')) {
+    isRemove = true;
+    const shortname = button.customId.split('-')[0];
+    const roles = guild.roles.cache.find((role) =>
+      role.name.includes(shortname),
+    );
+    guildMember.roles.remove(roles);
+    role = {
+      name: shortname,
+    } as Role;
   } else {
-    const roleName = button.label;
-    role = guild.roles.cache.find((role) => role.name === roleName);
+    if (button.customId.includes('join')) {
+      const roleName = button.customId.split('-').slice(1, 10).join('-');
+      role = guild.roles.cache.find((role) => role.name === roleName);
+    } else {
+      const roleName = button.label;
+      role = guild.roles.cache.find((role) => role.name === roleName);
+    }
+    guildMember.roles.add(role);
   }
-  guildMember.roles.add(role);
 
-  return { guildMember, role };
+  return { guildMember, role, isRemove };
 };
 
 export default (client: Client) => {
@@ -40,7 +53,8 @@ export default (client: Client) => {
     const joinedChannel = client.channels.cache.find(
       (channel) => channel.type === 'GUILD_TEXT' && channel.name === 'ogólny',
     ) as TextChannel;
-    await joinedChannel.sendTyping();
+    console.log(joinedChannel.id);
+
     await joinedChannel.send({
       content: `Hej <@${member.id}>! Prosiłbym o ustawienie sobie imienia i nazwiska jako nick na tym serwerze.`,
     });
@@ -69,6 +83,7 @@ export default (client: Client) => {
         {
           id: guild.roles.everyone,
           allow: ['VIEW_CHANNEL'],
+          deny: ['SEND_MESSAGES'],
         },
         {
           id: projectManagerRole.id,
@@ -83,10 +98,13 @@ export default (client: Client) => {
 
     await interaction.deferReply();
 
-    const { guildMember, role } = handleButtonClick(interaction);
+    const { guildMember, role, isRemove } = handleButtonClick(interaction);
+
+    let action = 'is now part of';
+    if (isRemove) action = 'left';
 
     await interaction.editReply(
-      `${guildMember.displayName} now is part of ${role.name} team!`,
+      `${guildMember.displayName} ${action} ${role.name} team!`,
     );
   });
 

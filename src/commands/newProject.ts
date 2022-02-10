@@ -154,6 +154,13 @@ export const addRoleChooser = async (roles: Role[], channel: TextChannel) => {
         .setStyle('PRIMARY'),
     );
   }, new MessageActionRow());
+  const shortname = roles[0].name.split('-')[0];
+  row.addComponents(
+    new MessageButton()
+      .setCustomId(`${shortname}-remove`)
+      .setLabel('Remove me from this project')
+      .setStyle('DANGER'),
+  );
   await channel.sendTyping();
   const message = await channel.send({
     content: 'Choose your role:',
