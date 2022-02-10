@@ -37,18 +37,9 @@ export default (client: Client) => {
   });
 
   client.on('guildMemberAdd', async (member: GuildMember) => {
-    let joinedChannel: TextChannel;
-    let count = 0;
-    const interval = setInterval(() => {
-      joinedChannel = client.channels.cache.find(
-        (channel) =>
-          channel.type === 'GUILD_TEXT' &&
-          channel.lastMessage.content.includes(member.id),
-      ) as TextChannel;
-      if (count === 3) clearInterval(interval);
-      count++;
-    }, 1000);
-
+    const joinedChannel = client.channels.cache.find(
+      (channel) => channel.type === 'GUILD_TEXT' && channel.name === 'ogólny',
+    ) as TextChannel;
     await joinedChannel.sendTyping();
     await joinedChannel.send({
       content: `Hej <@${member.id}>! Prosiłbym o ustawienie sobie imienia i nazwiska jako nick na tym serwerze.`,
