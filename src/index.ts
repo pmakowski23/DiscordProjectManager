@@ -21,7 +21,9 @@ app.get('/', (_req: express.Request, res: express.Response) => {
 const { TOKEN } = env;
 deploy();
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS],
+});
 discord(client);
 client.login(TOKEN);
 
