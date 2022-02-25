@@ -1,19 +1,15 @@
 import { Client, Intents } from 'discord.js';
 import { env } from 'process';
-import { wakeDyno } from 'heroku-keep-awake';
 import * as express from 'express';
 import * as cors from 'cors';
 import * as dotenv from 'dotenv';
 import deploy from './deployCommands';
 import discord from './discord';
+import herokuKeepAwake from './herokuKeepAwake';
 
 dotenv.config();
 
-const siteUrl = 'https://discord-project-manager-bot.herokuapp.com/';
-const options = {
-  interval: 29,
-  logging: true,
-};
+const siteURL = 'https://discord-project-manager-bot.herokuapp.com/';
 
 const app = express();
 const port = env.PORT || 3000;
@@ -37,7 +33,7 @@ client.login(TOKEN);
 
 const runApp = async (app: express.Application) => {
   app.listen(port, () => {
-    wakeDyno(siteUrl, options);
+    herokuKeepAwake(siteURL);
     console.log(`Server running on http://localhost:${port}`);
   });
 };
