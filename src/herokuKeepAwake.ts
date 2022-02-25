@@ -5,7 +5,7 @@ export default function (url: string) {
     axios
       .get(url)
       .then((response) => {
-        console.log(response.data);
+        console.log(response);
       })
       .catch((error) => {
         const { response } = error;
