@@ -149,7 +149,7 @@ const addIntegrationChannels = (
     (previousValue, name) => [
       ...previousValue,
       {
-        name: shortname + name,
+        name: `${shortname}-${name}`,
         permissionOverwrites: [
           {
             id: interaction.guild.roles.cache.find(
