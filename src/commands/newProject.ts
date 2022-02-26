@@ -8,9 +8,10 @@ import {
   MessageActionRow,
   MessageButton,
   TextChannel,
-  RoleData,
   Message,
 } from 'discord.js';
+import { basicRoles, integrations } from '../constants';
+import { Channel } from '../types';
 
 export const data = new SlashCommandBuilder()
   .setName('new-project')
@@ -49,15 +50,6 @@ export const checkProjectName = async (
     shortname,
   };
 };
-
-const basicRoles: RoleData[] = [
-  {},
-  { name: 'Frontend', color: 'GREEN' },
-  { name: 'Backend', color: 'ORANGE' },
-  { name: 'Designer', color: 'FUCHSIA' },
-  { name: 'DevOps', color: 'BLUE' },
-  { name: 'Product-owner', color: 'NAVY' },
-];
 
 export const createProjectRoles = async (
   interaction: Interaction,
@@ -105,37 +97,76 @@ export const createCategory = async (
 
 export const createChannels = async (
   interaction: Interaction,
-  category: CategoryChannel,
-  roles: Role[],
+  channels: Channel[],
 ) => {
   return await Promise.all(
-    roles.slice(0, -1).map(
-      async (role) =>
-        await interaction.guild.channels.create(role.name || 'general', {
+    channels.map(
+      async ({ name, permissionOverwrites, parent }) =>
+        await interaction.guild.channels.create(name || 'general', {
           type: 'GUILD_TEXT',
-          permissionOverwrites: [
-            {
-              id: interaction.guild.roles.cache.find(
-                (cacheRole) => cacheRole.name === role.name,
-              ),
-              allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
-            },
-            {
-              id: interaction.guild.roles.cache.find((cacheRole) =>
-                cacheRole.name.includes('Product-owner'),
-              ),
-              allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
-            },
-            {
-              id: interaction.guild.roles.everyone,
-              deny: ['VIEW_CHANNEL'],
-            },
-          ],
-          parent: category,
+          permissionOverwrites,
+          parent,
         }),
     ),
   );
 };
+
+const parseChannels = (
+  interaction: Interaction,
+  roles: Role[],
+  category: CategoryChannel,
+): Channel[] =>
+  roles.slice(0, -1).map(({ name }) => ({
+    name,
+    permissionOverwrites: [
+      {
+        id: interaction.guild.roles.cache.find(
+          (cacheRole) => cacheRole.name === name,
+        ),
+        allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
+      },
+      {
+        id: interaction.guild.roles.cache.find((cacheRole) =>
+          cacheRole.name.includes('Product-owner'),
+        ),
+        allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'READ_MESSAGE_HISTORY'],
+      },
+      {
+        id: interaction.guild.roles.everyone,
+        deny: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+      },
+    ],
+    parent: category,
+  }));
+
+const addIntegrationChannels = (
+  interaction: Interaction,
+  channels: Channel[],
+  integrations: string[],
+  shortname: string,
+): Channel[] =>
+  integrations.reduce(
+    (previousValue, name) => [
+      ...previousValue,
+      {
+        name,
+        permissionOverwrites: [
+          {
+            id: interaction.guild.roles.cache.find(
+              (cacheRole) => cacheRole.name === `${shortname}-general`,
+            ),
+            allow: ['VIEW_CHANNEL', 'READ_MESSAGE_HISTORY'],
+          },
+          {
+            id: interaction.guild.roles.everyone,
+            deny: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+          },
+        ],
+        parent: previousValue[0].parent,
+      },
+    ],
+    channels,
+  );
 
 export const joinButton = (customId: string) =>
   new MessageActionRow().addComponents(
@@ -178,7 +209,14 @@ export const handleCreateNewProjectCommand = async (
 ) => {
   const roles = await createProjectRoles(interaction, shortname);
   const category = await createCategory(interaction, name, shortname);
-  const channels = await createChannels(interaction, category, roles);
+  const parsedChannels = parseChannels(interaction, roles, category);
+  const withIntegrations = addIntegrationChannels(
+    interaction,
+    parsedChannels,
+    integrations,
+    shortname,
+  );
+  const channels = await createChannels(interaction, withIntegrations);
   const generalChannel = channels[0];
   await addRoleChooser(roles, generalChannel);
 
