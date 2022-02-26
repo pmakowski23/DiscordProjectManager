@@ -21,14 +21,14 @@ const isProperChannel = (interaction: CommandInteraction) => {
 };
 
 export const commandsHandler = async (interaction: CommandInteraction) => {
-  if (isProperChannel(interaction)) return;
+  if (!isProperChannel(interaction)) return;
 
   const { commandName, options } = interaction;
   const { data } = options;
 
-  if (commandName === 'new-project') {
-    await interaction.reply('Working on it...');
+  await interaction.reply('Working on it...');
 
+  if (commandName === 'new-project') {
     const { projectName, name, shortname } = await checkProjectName(
       interaction,
       data,
@@ -43,6 +43,6 @@ export const commandsHandler = async (interaction: CommandInteraction) => {
   } else if (commandName === 'clear') {
     handleClearCommand(interaction);
   } else {
-    await interaction.reply('Use proper command.');
+    await interaction.editReply('Use proper command.');
   }
 };

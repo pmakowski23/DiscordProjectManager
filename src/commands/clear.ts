@@ -25,5 +25,5 @@ export const handleClearCommand = async (interaction: CommandInteraction) => {
   await clearRoles(interaction);
   await clearChannels(interaction);
 
-  await interaction.reply('Done');
+  await interaction.editReply('Done');
 };
