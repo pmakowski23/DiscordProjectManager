@@ -21,13 +21,14 @@ const isProperChannel = (interaction: CommandInteraction) => {
 };
 
 export const commandsHandler = async (interaction: CommandInteraction) => {
-  await interaction.deferReply();
   if (isProperChannel(interaction)) return;
 
   const { commandName, options } = interaction;
   const { data } = options;
 
   if (commandName === 'new-project') {
+    await interaction.reply('Working on it...');
+
     const { projectName, name, shortname } = await checkProjectName(
       interaction,
       data,
