@@ -37,11 +37,11 @@ export const checkProjectName = async (
   const shortname = shortnameObj.value;
   const name = nameObj.value;
   if (typeof shortname !== 'string' || typeof name !== 'string') {
-    await interaction.reply('Provide proper name.');
+    await interaction.editReply('Provide proper name.');
     throw new Error();
   }
   if (!/[A-Z]{2}/.test(shortname) || shortname.length !== 2) {
-    await interaction.reply('Shortname must be 2 uppercase letters.');
+    await interaction.editReply('Shortname must be 2 uppercase letters.');
     throw new Error();
   }
   return {
