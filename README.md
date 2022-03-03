@@ -2,6 +2,23 @@
 
 ### [Invite link for the bot](https://discord.com/api/oauth2/authorize?client_id=937356374038437938&permissions=8&scope=bot%20applications.commands)
 
+## TODO
+- [ ] Add integration with github webhooks ([octokit/webhooks.js](https://github.com/octokit/webhooks.js/))
+  - [ ] command to create github integration with
+    - github webhook secret
+    - not reviewed PRs reminder intervals (in days)
+    - role to mention with reminder
+    - do you want checks error info
+  - [ ] bot will send
+    - [ ] custom messages on pull requests
+    - [ ] add reactions based on actions connected with PR
+      - ✅ on approval
+      - ♻️ on requested changes
+      - 📝 on added comment
+      - ❌ on any of the checks result in error
+    - [ ] send message on pull request merged
+    - [ ] send reminders (based on interval)
+
 ## Commands
 
 - `/new-project {name}` creates new category based on provided name and basic roles and channels connected with the project 
