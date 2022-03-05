@@ -2,7 +2,10 @@ import { Client, GuildMember, TextChannel } from 'discord.js';
 
 export const newMemberHandler = async (client: Client, member: GuildMember) => {
   const joinedChannel = client.channels.cache.find(
-    (channel) => channel.type === 'GUILD_TEXT' && channel.name === 'ogólny',
+    (channel) =>
+      channel.type === 'GUILD_TEXT' &&
+      channel.name === 'ogólny' &&
+      channel.guild.id === member.guild.id,
   ) as TextChannel;
   console.log(joinedChannel.id);
 
