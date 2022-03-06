@@ -6,7 +6,7 @@ export const data = new SlashCommandBuilder()
   .setName('add-github')
   .setDescription('Adds github integration to your project')
   .addChannelOption((option) =>
-    option.setName('Project').addChannelType(ChannelType.GuildText),
+    option.setName('project').addChannelType(ChannelType.GuildText),
   );
 
 export const handleAddGithubCommand = async (
